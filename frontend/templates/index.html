@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cyber Monitor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+<div id="loader" class="loader"></div>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>🛡 CyberMonitor</h2>
+
+        <button onclick="showSection('dashboard', this)" class="active">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+        </button>
+
+        <button onclick="showSection('analytics', this)">
+            <i data-lucide="bar-chart"></i> Analytics
+        </button>
+
+        <button onclick="showSection('alerts', this)">
+            <i data-lucide="alert-triangle"></i> Alerts
+        </button>
+
+        <button onclick="showSection('logs', this)">
+            <i data-lucide="file-text"></i> Logs
+        </button>
+
+        <button onclick="showSection('ml', this)">
+            <i data-lucide="cpu"></i> ML Insights
+        </button>
+    </div>
+
+    <!-- MAIN -->
+    <div class="content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <h1>🛡 Cyber Threat Monitor</h1>
+
+            <div class="status">
+                <span class="dot"></span>
+                <span>Live Monitoring</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section">
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Requests</h3>
+                    <p id="total">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Active Alerts</h3>
+                    <p id="alertsCount">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS -->
+        <div id="analytics" class="section hidden">
+            <div class="chart-grid">
+
+                <div class="chart-card">
+                    <h3>Requests per IP</h3>
+                    <canvas id="ipChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Status Distribution</h3>
+                    <canvas id="statusChart"></canvas>
+                </div>
+
+                <div class="chart-card full">
+                    <h3>Traffic Trend</h3>
+                    <canvas id="trafficChart"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ALERTS -->
+        <div id="alerts" class="section hidden">
+            <h2>🚨 Security Alerts</h2>
+            <div id="alertBox"></div>
+        </div>
+
+        <!-- 🚨 Attack Intelligence Panel -->
+        <div class="card" id="attack-panel">
+            <h2>🚨 Attack Intelligence</h2>
+            <div id="attack-container">
+                <p style="color: gray;">No data yet...</p>
+            </div>
+        </div>
+
+        <!-- LOGS -->
+        <div id="logs" class="section hidden">
+            <h2>Logs</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>Endpoint</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="logTable"></tbody>
+            </table>
+        </div>
+
+        <!-- ML -->
+        <div id="ml" class="section hidden">
+            <h2>🤖 ML Insights</h2>
+
+            <div class="chart-card">
+                <h3>ML Traffic Analysis</h3>
+                <canvas id="mlChart"></canvas>
+            </div>
+
+            <div id="mlBox"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
