@@ -1,13 +1,18 @@
 from flask import Flask, jsonify, render_template
 from threading import Thread
+import requests
 
+from alerts import generate_alerts
 from log_reader import start_reader
 from data_store import ip_counter, logs, alerts
 from ml_model import detect_anomaly
 from attack_classifier import AttackClassifier
 
-# ✅ Initialize classifier (NEW)
+# ✅ Initialize classifier
 classifier = AttackClassifier()
+
+# ✅ NEW: Location cache (PERFORMANCE FIX)
+location_cache = {}
 
 app = Flask(
     __name__,
@@ -15,9 +20,40 @@ app = Flask(
     static_folder="../frontend/static"
 )
 
+# ✅ UPDATED: Location function with caching
+def get_location(ip):
+    # 🔥 RETURN FROM CACHE (FAST)
+    if ip in location_cache:
+        return location_cache[ip]
+
+    try:
+        res = requests.get(f"http://ip-api.com/json/{ip}", timeout=2)
+        data = res.json()
+
+        # skip private/local IPs
+        if data.get("status") != "success":
+            return None
+
+        loc = {
+            "ip": ip,
+            "lat": data.get("lat"),
+            "lon": data.get("lon"),
+            "country": data.get("country")
+        }
+
+        # 🔥 SAVE TO CACHE
+        location_cache[ip] = loc
+
+        return loc
+
+    except:
+        return None
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 @app.route("/api/stats")
 def stats():
@@ -37,7 +73,6 @@ def stats():
 
     ml_alerts = detect_anomaly()
 
-    
     attack_predictions = classifier.classify(
         logs,
         dict(ip_counter),
@@ -45,21 +80,34 @@ def stats():
         endpoints
     )
 
+    generate_alerts(attack_predictions)
+
+    # ✅ GEO LOCATION DATA (NOW FAST)
+    locations = []
+    for ip in ip_counter.keys():
+        loc = get_location(ip)
+        if loc:
+            locations.append(loc)
+
     return jsonify({
         "total_requests": total_requests,
         "ip_counts": dict(ip_counter),
         "top_ips": top_ips,
         "status_distribution": status_count,
         "top_endpoints": endpoints,
-        "logs": logs[-20:],
+        "logs": logs[-20:],   # unchanged
         "alerts": alerts,
         "ml_alerts": ml_alerts,
         "attack_predictions": attack_predictions,
         "ml_data": {
             "ips": list(ip_counter.keys()),
             "counts": list(ip_counter.values())
-        }
+        },
+
+        # ✅ MAP DATA
+        "locations": locations
     })
+
 
 if __name__ == "__main__":
     Thread(target=start_reader, daemon=True).start()

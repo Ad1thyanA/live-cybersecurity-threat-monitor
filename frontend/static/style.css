@@ -1,15 +1,17 @@
+/* ===== GLOBAL ===== */
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #0f172a;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #020617, #0f172a);
     color: #e2e8f0;
 }
 
+/* ===== LAYOUT ===== */
 .app {
     display: flex;
 }
 
-/* SIDEBAR */
+/* ===== SIDEBAR ===== */
 .sidebar {
     width: 230px;
     background: #020617;
@@ -20,7 +22,10 @@ body {
 
 .sidebar h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #cbd5f5;
 }
 
 .sidebar button {
@@ -32,40 +37,46 @@ body {
     border: none;
     text-align: left;
     cursor: pointer;
-    border-radius: 6px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
+    border-radius: 8px;
+    transition: 0.2s;
+    font-size: 14px;
 }
 
 .sidebar button:hover {
     background: #1e293b;
-    color: white;
+    color: #fff;
 }
 
 .sidebar button.active {
-    background: #1d4ed8;
-    color: white;
+    background: #1e293b;
+    color: #fff;
+    border-left: 3px solid #3b82f6;
 }
 
-/* CONTENT */
+/* ===== CONTENT ===== */
 .content {
     flex: 1;
     padding: 25px;
 }
 
-/* TOPBAR */
+/* ===== TOPBAR ===== */
 .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    background: #020617;
+    padding: 18px 22px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #1e293b;
 }
 
-/* STATUS */
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
 .status {
     display: flex;
     align-items: center;
@@ -73,37 +84,71 @@ body {
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background: #22c55e;
     border-radius: 50%;
-    animation: blink 1s infinite;
 }
 
-@keyframes blink {
-    50% { opacity: 0.4; }
+/* ===== SECTION TITLES ===== */
+.section-title {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 500;
 }
 
-/* SECTIONS */
+/* ===== SECTION CONTROL ===== */
 .hidden {
     display: none;
 }
 
-/* CARDS */
+/* ===== CARDS ===== */
 .cards {
-    display: flex;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
 .card {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 12px;
-    flex: 1;
-    text-align: center;
+    background: linear-gradient(145deg, #1e293b, #020617);
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* CHART GRID */
+/* ===== METRICS ===== */
+.metric-title {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.metric-value {
+    font-size: 26px;
+    font-weight: 600;
+}
+
+/* ===== PANEL HEADERS ===== */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-header {
+    margin-bottom: 10px;
+}
+
+/* ===== SMALL TEXT ===== */
+.sub {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* ===== CHART GRID ===== */
 .chart-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -111,64 +156,112 @@ body {
 }
 
 .chart-card {
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 12px;
+    background: linear-gradient(145deg, #1e293b, #020617);
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
 .chart-card.full {
     grid-column: span 2;
 }
 
+/* ===== FIX CHART LOOK ===== */
 canvas {
     width: 100% !important;
-    height: 250px !important;
-    background: white;
-    border-radius: 8px;
+    height: 260px !important;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
 }
 
-/* TABLE */
+/* ===== TABLE ===== */
 table {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
     border-collapse: collapse;
 }
 
 th {
-    background: #1e293b;
+    background: #020617;
+    color: #94a3b8;
+    font-size: 13px;
 }
 
 td, th {
     padding: 12px;
-    text-align: center;
+    text-align: left;
 }
 
-tr:nth-child(even) {
-    background: #1e293b;
+tr {
+    border-bottom: 1px solid #1e293b;
 }
 
-/* ALERT */
+/* ===== ALERTS ===== */
 .alert-item {
-    background: #7f1d1d;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid;
+    background: #020617;
+    font-size: 14px;
 }
 
-/* ML */
-.ml-item {
-    background: #1d4ed8;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 6px;
+.alert-item.high {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
 }
 
-/* LOADER */
+.alert-item.medium {
+    border-color: #f59e0b;
+}
+
+.alert-item.low {
+    border-color: #3b82f6;
+}
+
+/* ===== TOP ATTACKER ===== */
+#top-attacker {
+    margin-top: 10px;
+}
+
+#topAttackerBox {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* ===== ATTACK PANEL ===== */
+#attack-panel {
+    margin-top: 20px;
+}
+
+/* ===== ML ===== */
+.ml-summary {
+    margin-top: 15px;
+    padding: 15px;
+    background: #020617;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+}
+
+.ml-summary ul {
+    padding-left: 18px;
+}
+
+/* ===== MAP ===== */
+#map {
+    border-radius: 12px;
+    border: 1px solid #1e293b;
+}
+
+/* ===== LOADER ===== */
 .loader {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: #0f172a;
+    background: #020617;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -179,59 +272,13 @@ tr:nth-child(even) {
     content: "";
     width: 40px;
     height: 40px;
-    border: 5px solid #1e293b;
-    border-top: 5px solid #1d4ed8;
+    border: 4px solid #1e293b;
+    border-top: 4px solid #3b82f6;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-}
-
-/* 🚨 Attack Panel */
-#attack-panel {
-    margin-top: 20px;
-}
-
-.attack-item {
-    background: #1e1e1e;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-left: 5px solid #444;
-}
-
-/* Severity Colors */
-.high {
-    border-left-color: red;
-}
-
-.medium {
-    border-left-color: orange;
-}
-
-.low {
-    border-left-color: green;
-}
-
-.attack-type {
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.attack-desc {
-    font-size: 13px;
-    color: #aaa;
-}
-
-/* 🚨 Blinking HIGH alert */
-@keyframes blink {
-    0% { background-color: rgba(255, 0, 0, 0.2); }
-    50% { background-color: rgba(255, 0, 0, 0.6); }
-    100% { background-color: rgba(255, 0, 0, 0.2); }
-}
-
-.blink {
-    animation: blink 1s infinite;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
