@@ -2,11 +2,11 @@ from flask import Flask, jsonify, render_template
 from threading import Thread
 import requests
 
-from alerts import generate_alerts
-from log_reader import start_reader
-from data_store import ip_counter, logs, alerts
-from ml_model import detect_anomaly
-from attack_classifier import AttackClassifier
+from backend.alerts import generate_alerts
+from backend.log_reader import start_reader
+from backend.data_store import ip_counter, logs, alerts
+from backend.ml_model import detect_anomaly
+from backend.attack_classifier import AttackClassifier
 from flask import request
 import config
 from threading import Thread
