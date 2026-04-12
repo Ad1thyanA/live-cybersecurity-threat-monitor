@@ -5,8 +5,7 @@ from parser import parse_log
 from analytics import process_log
 from ml_model import detect_anomaly
 from data_store import logs, MAX_LOGS
-
-URL = "http://127.0.0.1:9000/live.log"
+import config 
 
 last_size = 0
 
@@ -15,7 +14,7 @@ def start_reader():
 
     while True:
         try:
-            r = requests.get(URL)
+            r = requests.get(config.LOG_SOURCE, timeout=3)
             lines = r.text.strip().split("\n")
 
             # 🔥 read only new lines based on length
@@ -34,6 +33,11 @@ def start_reader():
                         logs.pop(0)
 
                     process_log(parsed)
+
+                if r.status_code != 200:
+                    print("⚠️ Unable to fetch logs")
+                    time.sleep(2)
+                    continue
 
             # 🔥 update pointer
             last_size = len(lines)

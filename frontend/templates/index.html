@@ -50,6 +50,21 @@
         <!-- DASHBOARD -->
         <div id="dashboard" class="section">
 
+            <div class="card">
+    <h3>Connect Log Source</h3>
+
+    <input 
+        type="text" 
+        id="logUrl" 
+        placeholder="http://ip:9000/live.log"
+        style="width: 100%; padding: 10px; margin-top: 10px;"
+    >
+
+    <button onclick="setLogSource()" style="margin-top: 10px;">
+        Connect
+    </button>
+</div>
+
             <h2 class="section-title">Dashboard</h2>
 
             <!-- METRICS -->

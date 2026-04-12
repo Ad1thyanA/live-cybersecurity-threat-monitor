@@ -7,9 +7,12 @@ from log_reader import start_reader
 from data_store import ip_counter, logs, alerts
 from ml_model import detect_anomaly
 from attack_classifier import AttackClassifier
+from flask import request
+import config
 
 # ✅ Initialize classifier
 classifier = AttackClassifier()
+
 
 # ✅ NEW: Location cache (PERFORMANCE FIX)
 location_cache = {}
@@ -107,6 +110,18 @@ def stats():
         # ✅ MAP DATA
         "locations": locations
     })
+
+@app.route("/set-log-source", methods=["POST"])
+def set_log_source():
+    data = request.get_json()
+    url = data.get("url")
+
+    if url and url.startswith("http"):
+        config.LOG_SOURCE = url
+        print("✅ Log source updated to:", config.LOG_SOURCE)
+        return {"status": "success"}
+    
+    return {"status": "error", "message": "Invalid URL"}
 
 
 if __name__ == "__main__":

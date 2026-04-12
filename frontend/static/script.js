@@ -96,6 +96,32 @@ function updateTopAttacker(ipCounts) {
     `;
 }
 
+function setLogSource() {
+    const url = document.getElementById("logUrl").value;
+
+    if (!url.startsWith("http")) {
+        alert("Enter valid URL");
+        return;
+    }
+
+    fetch("/set-log-source", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url: url })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert("✅ Log source connected!");
+        } else {
+            alert("❌ Invalid URL");
+        }
+    })
+    .catch(() => alert("Server error"));
+}
+
 // LOAD DATA
 async function loadData() {
     try {
