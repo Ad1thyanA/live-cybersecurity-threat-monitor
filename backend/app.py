@@ -126,4 +126,4 @@ def set_log_source():
 
 if __name__ == "__main__":
     Thread(target=start_reader, daemon=True).start()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)
