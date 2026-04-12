@@ -3,8 +3,8 @@ import time
 
 from backend.parser import parse_log
 from backend.analytics import process_log
-from ml_model import detect_anomaly
-from data_store import logs, MAX_LOGS
+from backend.ml_model import detect_anomaly
+from backend.data_store import logs, MAX_LOGS
 import config 
 
 last_size = 0

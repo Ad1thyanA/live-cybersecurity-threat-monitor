@@ -10,7 +10,7 @@ from backend.attack_classifier import AttackClassifier
 from flask import request
 import config
 from threading import Thread
-from log_reader import start_reader
+from backend.log_reader import start_reader
 
 reader_started = False
 

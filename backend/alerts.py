@@ -1,4 +1,4 @@
-from data_store import alerts
+from backend.data_store import alerts
 
 def generate_alerts(attack_predictions):
     alerts.clear()

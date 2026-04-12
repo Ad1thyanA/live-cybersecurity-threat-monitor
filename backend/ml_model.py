@@ -1,5 +1,5 @@
 from sklearn.cluster import KMeans
-from data_store import ip_counter, logs
+from backend.data_store import ip_counter, logs
 
 def extract_features():
     features = []

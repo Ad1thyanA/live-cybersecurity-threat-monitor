@@ -1,7 +1,6 @@
 #project done by adithyan, yedhu , devaduth
 
-from data_store import ip_counter
-
+from backend.data_store import ip_counter
 def process_log(log):
     ip = log["ip"]
     ip_counter[ip] += 1
