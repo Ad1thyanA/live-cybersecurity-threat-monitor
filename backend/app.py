@@ -9,6 +9,18 @@ from ml_model import detect_anomaly
 from attack_classifier import AttackClassifier
 from flask import request
 import config
+from threading import Thread
+from log_reader import start_reader
+
+reader_started = False
+
+def start_background():
+    global reader_started
+    if not reader_started:
+        Thread(target=start_reader, daemon=True).start()
+        reader_started = True
+
+start_background()
 
 # ✅ Initialize classifier
 classifier = AttackClassifier()
