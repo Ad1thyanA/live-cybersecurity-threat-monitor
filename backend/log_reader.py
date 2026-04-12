@@ -5,7 +5,7 @@ from backend.parser import parse_log
 from backend.analytics import process_log
 from backend.ml_model import detect_anomaly
 from backend.data_store import logs, MAX_LOGS
-import config 
+from backend import config 
 
 last_size = 0
 

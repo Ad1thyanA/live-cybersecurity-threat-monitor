@@ -8,7 +8,7 @@ from backend.data_store import ip_counter, logs, alerts
 from backend.ml_model import detect_anomaly
 from backend.attack_classifier import AttackClassifier
 from flask import request
-import config
+from backend import config
 from threading import Thread
 from backend.log_reader import start_reader
 
