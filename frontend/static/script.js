@@ -99,10 +99,7 @@ function updateTopAttacker(ipCounts) {
 function setLogSource() {
     const url = document.getElementById("logUrl").value;
 
-    if (!url.startsWith("http")) {
-        alert("Enter valid URL");
-        return;
-    }
+    console.log("Sending URL:", url);   // 🔥 ADD THIS
 
     fetch("/set-log-source", {
         method: "POST",
@@ -113,13 +110,17 @@ function setLogSource() {
     })
     .then(res => res.json())
     .then(data => {
+        console.log("Response:", data);  // 🔥 ADD THIS
+
         if (data.status === "success") {
-            alert("✅ Log source connected!");
+            alert("✅ Connected!");
         } else {
-            alert("❌ Invalid URL");
+            alert("❌ Failed");
         }
     })
-    .catch(() => alert("Server error"));
+    .catch(err => {
+        console.log("ERROR:", err);   // 🔥 ADD THIS
+    });
 }
 
 // LOAD DATA
