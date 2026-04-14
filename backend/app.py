@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from threading import Thread
 import requests
 
@@ -7,26 +7,12 @@ from backend.log_reader import start_reader
 from backend.data_store import ip_counter, logs, alerts
 from backend.ml_model import detect_anomaly
 from backend.attack_classifier import AttackClassifier
-from flask import request
 from backend import config
-from threading import Thread
-from backend.log_reader import start_reader
-
-reader_started = False
-
-def start_background():
-    global reader_started
-    if not reader_started:
-        Thread(target=start_reader, daemon=True).start()
-        reader_started = True
-
-start_background()
 
 # ✅ Initialize classifier
 classifier = AttackClassifier()
 
-
-# ✅ NEW: Location cache (PERFORMANCE FIX)
+# ✅ Location cache (PERFORMANCE FIX)
 location_cache = {}
 
 app = Flask(
@@ -35,9 +21,22 @@ app = Flask(
     static_folder="../frontend/static"
 )
 
-# ✅ UPDATED: Location function with caching
+# 🚀 START BACKGROUND THREAD (CORRECT WAY)
+reader_started = False
+
+def start_background():
+    global reader_started
+    if not reader_started:
+        print("🚀 Starting log reader thread...")
+        Thread(target=start_reader, daemon=True).start()
+        reader_started = True
+
+# 🔥 IMPORTANT: Start AFTER app created
+start_background()
+
+
+# ✅ Location function with caching
 def get_location(ip):
-    # 🔥 RETURN FROM CACHE (FAST)
     if ip in location_cache:
         return location_cache[ip]
 
@@ -45,7 +44,6 @@ def get_location(ip):
         res = requests.get(f"http://ip-api.com/json/{ip}", timeout=2)
         data = res.json()
 
-        # skip private/local IPs
         if data.get("status") != "success":
             return None
 
@@ -56,9 +54,7 @@ def get_location(ip):
             "country": data.get("country")
         }
 
-        # 🔥 SAVE TO CACHE
         location_cache[ip] = loc
-
         return loc
 
     except:
@@ -97,7 +93,7 @@ def stats():
 
     generate_alerts(attack_predictions)
 
-    # ✅ GEO LOCATION DATA (NOW FAST)
+    # 🌍 GEO DATA
     locations = []
     for ip in ip_counter.keys():
         loc = get_location(ip)
@@ -110,7 +106,7 @@ def stats():
         "top_ips": top_ips,
         "status_distribution": status_count,
         "top_endpoints": endpoints,
-        "logs": logs[-20:],   # unchanged
+        "logs": logs[-20:],
         "alerts": alerts,
         "ml_alerts": ml_alerts,
         "attack_predictions": attack_predictions,
@@ -118,10 +114,9 @@ def stats():
             "ips": list(ip_counter.keys()),
             "counts": list(ip_counter.values())
         },
-
-        # ✅ MAP DATA
         "locations": locations
     })
+
 
 @app.route("/set-log-source", methods=["POST"])
 def set_log_source():
@@ -132,10 +127,5 @@ def set_log_source():
         config.LOG_SOURCE = url
         print("✅ Log source updated to:", config.LOG_SOURCE)
         return {"status": "success"}
-    
+
     return {"status": "error", "message": "Invalid URL"}
-
-
-if __name__ == "__main__":
-    Thread(target=start_reader, daemon=True).start()
-    app.run(host="0.0.0.0", port=10000)
