@@ -121,6 +121,8 @@ def stats():
 
 @app.route("/set-log-source", methods=["POST"])
 def set_log_source():
+    global reader_started
+
     data = request.get_json()
     url = data.get("url")
 
@@ -129,6 +131,13 @@ def set_log_source():
     if url and url.startswith("http"):
         config.LOG_SOURCE = url
         print("✅ Log source updated to:", config.LOG_SOURCE)
+
+        # 🚀 START READER HERE (FINAL FIX)
+        if not reader_started:
+            print("🚀 Starting reader after URL set...")
+            Thread(target=start_reader, daemon=True).start()
+            reader_started = True
+
         return {"status": "success"}
 
-    return {"status": "error", "message": "Invalid URL"}
+    return {"status": "error"}
