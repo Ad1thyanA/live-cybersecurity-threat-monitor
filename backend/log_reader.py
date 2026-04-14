@@ -14,10 +14,28 @@ def start_reader():
 
     while True:
         try:
-            r = requests.get(config.LOG_SOURCE, timeout=3)
+            # 🚨 WAIT UNTIL URL IS SET
+            if not config.LOG_SOURCE:
+                print("⏳ Waiting for log source...")
+                time.sleep(2)
+                continue
+
+            print("📡 Fetching from:", config.LOG_SOURCE)
+
+            r = requests.get(config.LOG_SOURCE, timeout=5)
+
+            # 🚨 CHECK STATUS BEFORE PROCESSING
+            if r.status_code != 200:
+                print("⚠️ Failed to fetch logs:", r.status_code)
+                time.sleep(2)
+                continue
+
             lines = r.text.strip().split("\n")
 
-            # 🔥 read only new lines based on length
+            # 🔥 HANDLE RESET CASE
+            if last_size > len(lines):
+                last_size = 0
+
             new_lines = lines[last_size:]
 
             for line in new_lines:
@@ -34,12 +52,7 @@ def start_reader():
 
                     process_log(parsed)
 
-                if r.status_code != 200:
-                    print("⚠️ Unable to fetch logs")
-                    time.sleep(2)
-                    continue
-
-            # 🔥 update pointer
+            # 🔥 UPDATE POINTER
             last_size = len(lines)
 
             detect_anomaly()
@@ -47,5 +60,5 @@ def start_reader():
             time.sleep(1)
 
         except Exception as e:
-            print("Log reader error:", e)
-            time.sleep(1)
+            print("❌ Log reader error:", e)
+            time.sleep(2)
