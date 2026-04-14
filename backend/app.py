@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 from threading import Thread
 import requests
+import os
 
 from backend.alerts import generate_alerts
 from backend.log_reader import start_reader
@@ -12,7 +13,7 @@ from backend import config
 # ✅ Initialize classifier
 classifier = AttackClassifier()
 
-# ✅ Location cache (PERFORMANCE FIX)
+# ✅ Location cache
 location_cache = {}
 
 app = Flask(
@@ -21,7 +22,7 @@ app = Flask(
     static_folder="../frontend/static"
 )
 
-# 🚀 START BACKGROUND THREAD (CORRECT WAY)
+# 🚀 START BACKGROUND THREAD (RENDER SAFE)
 reader_started = False
 
 def start_background():
@@ -31,11 +32,11 @@ def start_background():
         Thread(target=start_reader, daemon=True).start()
         reader_started = True
 
-# 🔥 IMPORTANT: Start AFTER app created
+# 🔥 FORCE START (works in Render + Gunicorn)
 start_background()
 
 
-# ✅ Location function with caching
+# 🌍 LOCATION FUNCTION
 def get_location(ip):
     if ip in location_cache:
         return location_cache[ip]
@@ -122,6 +123,8 @@ def stats():
 def set_log_source():
     data = request.get_json()
     url = data.get("url")
+
+    print("🔥 RECEIVED URL:", url)
 
     if url and url.startswith("http"):
         config.LOG_SOURCE = url
